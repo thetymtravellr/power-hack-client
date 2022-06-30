@@ -1,10 +1,10 @@
-import styles from './nav.module.css';
 
 const Nav = () => {
     return (
-        <header>
-            <nav className={styles.nav}>
-                <h1>Power-Hack</h1>
+        <header className="p-2">
+            <nav className="flex justify-between">
+                <h1 className="font-bold">Power-Hack</h1>
+                <p>paid bill:0</p>
             </nav>
         </header>
     );

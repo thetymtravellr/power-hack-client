@@ -1,11 +1,11 @@
-import styles from './layoutHeader.module.css';
+
 
 const LayoutHeader = () => {
   return (
-    <header className={styles.header}>
-      <div className={styles.content}>
+    <header className="flex justify-between">
+      <div className="flex">
         <h1>Billings</h1>
-        <div className={styles.searchBar}>
+        <div className="ml-4">
           <input type="text" placeholder="Search" />
           <button>Search</button>
         </div>

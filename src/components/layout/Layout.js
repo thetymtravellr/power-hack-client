@@ -1,10 +1,10 @@
-import styles from './layout.module.css';
+
 import LayoutBody from "./LayoutBody";
 import LayoutHeader from "./LayoutHeader";
 
 const Layout = () => {
     return (
-        <div className={styles}>
+        <div>
             <LayoutHeader/>
             <LayoutBody/>
         </div>
