@@ -12,8 +12,11 @@ const Modal = ({ add, id }) => {
   const [showModal, setShowModal] = useState(false);
   const [alert, setSetAlert] = useState(false);
   const [message, setMessage] = useState("");
-  const { userEmail, data, refetch, setIsAdding, setPaidAmount } =
+  const { userEmail, data: billData, refetch, setIsAdding, setPaidAmount } =
     useContext(BillingDataContext);
+
+    const matchedData = billData?.data?.find(bill => bill._id === id)
+    console.log(matchedData);
 
   const addBillData = (data) => {
     setIsAdding(true);
@@ -52,10 +55,10 @@ const Modal = ({ add, id }) => {
 
   const updateBillData = (data) => {
     const updatedBillingData = {
-      fullname: data.fullname || data.data.fullname,
-      email: data.email || data.data.email,
-      phone: data.phone || data.data.phone,
-      amount: data.amount || data.data.amount,
+      fullname: data.fullname || matchedData.fullname,
+      email: data.email || matchedData.email,
+      phone: data.phone || matchedData.phone,
+      amount: data.amount || matchedData.amount,
     };
 
     fetch(`https://gentle-bastion-30357.herokuapp.com/update-billing/${id}`, {
