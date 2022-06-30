@@ -5,7 +5,7 @@ const DeleteConfirmationModal = ({ id, refetch }) => {
 
   console.log(id);
   const deleteBillingData = () => {
-    fetch(`http://localhost:8080/delete-billing/${id}`, {
+    fetch(`https://gentle-bastion-30357.herokuapp.com/delete-billing/${id}`, {
       method: "DELETE",
     })
       .then((res) => res.json())

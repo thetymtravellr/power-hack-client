@@ -28,7 +28,7 @@ const HomePage = () => {
     ["billingData", page],
     async () => {
       const res = await fetch(
-        `http://localhost:8080/billing-list?email=${userEmail}&page=${page}`,
+        `https://gentle-bastion-30357.herokuapp.com/billing-list?email=${userEmail}&page=${page}`,
         {
           method: "GET",
           headers: {

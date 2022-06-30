@@ -25,7 +25,7 @@ const Modal = ({ add, id }) => {
       addedBy: userEmail,
     };
     setPaidAmount((prevAmount) => prevAmount + billingData.amount);
-    fetch("http://localhost:8080/add-billing", {
+    fetch("https://gentle-bastion-30357.herokuapp.com/add-billing", {
       method: "POST",
       body: JSON.stringify(billingData),
       headers: {
@@ -58,7 +58,7 @@ const Modal = ({ add, id }) => {
       amount: data.amount || data.data.amount,
     };
 
-    fetch(`http://localhost:8080/update-billing/${id}`, {
+    fetch(`https://gentle-bastion-30357.herokuapp.com/update-billing/${id}`, {
       method: "PUT",
       body: JSON.stringify(updatedBillingData),
       headers: {

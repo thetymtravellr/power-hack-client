@@ -20,7 +20,7 @@ const RegisterPage = () => {
       email: data.email,
       password: data.password,
     };
-    fetch("http://localhost:8080/registration", {
+    fetch("https://gentle-bastion-30357.herokuapp.com/registration", {
       method: "POST",
       headers: {
         "content-type": "application/json",
