@@ -1,6 +1,6 @@
 import Modal from "../modal/Modal";
 
-const LayoutHeader = ({ setIsAdding }) => {
+const LayoutHeader = () => {
 
   return (
     <header className="flex justify-between bg-gray-100 py-2 px-5 border-b">
@@ -12,7 +12,7 @@ const LayoutHeader = ({ setIsAdding }) => {
         </div>
       </div>
       <div>
-        <Modal add={true} setIsAdding={setIsAdding}/>
+        <Modal add={true}/>
       </div>
     </header>
   );

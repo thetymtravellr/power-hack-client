@@ -1,19 +1,33 @@
-import { useState } from "react";
-import useGetProducts from "../../hooks/useGetProducts";
+import { useContext, useEffect } from "react";
+import { BillingDataContext } from "../../pages/home/HomePage";
 import LayoutBody from "../layout/LayoutBody";
 import LayoutHeader from "../layout/LayoutHeader";
 
 const Layout = () => {
-    
-  const [page, setPage] = useState(0);
-  const { data, isFetching, pageCount } = useGetProducts(page);
-  const [isAdding, setIsAdding] = useState(false);
+  const {
+    data,
+    setPaidAmount,
+    setPage,
+    pageCount
+  } = useContext(BillingDataContext);
   const pages = [...Array(pageCount).keys()];
+
+  useEffect(() => {
+    const calculatePaidAmount = async () => {
+      const paidAmount = data?.calculateAmountArray?.reduce(
+        (total, currentValue) =>
+          (total = total + parseInt(currentValue.amount)),
+        0
+      );
+      setPaidAmount(paidAmount);
+    };
+    calculatePaidAmount();
+  });
 
   return (
     <div>
-      <LayoutHeader setIsAdding={setIsAdding} />
-      <LayoutBody data={data} isFetching={isFetching} isAdding={isAdding} />
+      <LayoutHeader />
+      <LayoutBody />
       <div className="flex space-x-3 justify-center mt-12">
         {pages.length > 1 &&
           pages.map((page) => (

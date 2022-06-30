@@ -1,9 +1,19 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
+import { BillingDataContext } from "../../pages/home/HomePage";
 
-const Modal = ({ add, id, fullname, email, phone, amount, setIsAdding, setShowErrorModal }) => {
-  const { register,reset, handleSubmit,formState: { errors } } = useForm();
+const Modal = ({ add, id }) => {
+  const {
+    register,
+    reset,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
   const [showModal, setShowModal] = useState(false);
+  const [alert, setSetAlert] = useState(false);
+  const [message, setMessage] = useState("");
+  const { userEmail, data, refetch, setIsAdding, setPaidAmount } =
+    useContext(BillingDataContext);
 
   const addBillData = (data) => {
     setIsAdding(true);
@@ -12,9 +22,9 @@ const Modal = ({ add, id, fullname, email, phone, amount, setIsAdding, setShowEr
       email: data.email,
       phone: data.phone,
       amount: data.amount,
-      hello: 'dkfkdf'
+      addedBy: userEmail,
     };
-
+    setPaidAmount((prevAmount) => prevAmount + billingData.amount);
     fetch("http://localhost:8080/add-billing", {
       method: "POST",
       body: JSON.stringify(billingData),
@@ -24,23 +34,28 @@ const Modal = ({ add, id, fullname, email, phone, amount, setIsAdding, setShowEr
     })
       .then((res) => res.json())
       .then((data) => {
-        console.log(data);
-        if (data.message === 'successfully added') {
+        if (data.message === "successfully added") {
+          setPaidAmount((prevAmount) => prevAmount - billingData.amount);
           setIsAdding(false);
-          reset()
-          setShowModal(false)
-        } else {
-          setShowErrorModal(true)
+          reset();
+          setMessage(data.message);
+          setSetAlert(true);
+          refetch();
+        } else if (data.message === "Something went wrong") {
+          setPaidAmount((prevAmount) => prevAmount - billingData.amount);
+          setIsAdding(false);
+          setMessage(data.message);
+          setSetAlert(true);
         }
       });
   };
 
   const updateBillData = (data) => {
     const updatedBillingData = {
-      fullname: data.fullname || fullname,
-      email: data.email || email,
-      phone: data.phone || phone,
-      amount: data.amount || amount,
+      fullname: data.fullname || data.data.fullname,
+      email: data.email || data.data.email,
+      phone: data.phone || data.data.phone,
+      amount: data.amount || data.data.amount,
     };
 
     fetch(`http://localhost:8080/update-billing/${id}`, {
@@ -53,11 +68,13 @@ const Modal = ({ add, id, fullname, email, phone, amount, setIsAdding, setShowEr
       .then((res) => res.json())
       .then((data) => {
         if (data.acknowledged) {
-          console.log(data);
+          reset();
+          setShowModal(false);
+          refetch();
         }
+        setShowModal(false);
       });
   };
-
 
   return (
     <>
@@ -80,184 +97,232 @@ const Modal = ({ add, id, fullname, email, phone, amount, setIsAdding, setShowEr
                   <button
                     className="border-0 text-black  text-3xl font-semibold"
                     onClick={() => {
-                      setShowModal(false)
-                      reset()
+                      setShowModal(false);
+                      setSetAlert(false);
+                      reset();
                     }}
                   >
                     <p className="text-4xl">×</p>
                   </button>
                 </div>
                 {/*body*/}
-                <div className="relative p-6 flex-auto">
-                  {add ? (
-                    <form onSubmit={handleSubmit(addBillData)}>
-                      <div className="mb-5">
-                        <label
-                          for="name"
-                          className="block mb-2 font-bold text-gray-600"
-                        >
-                          Full Name
-                        </label>
-                        <input
-                          type="text"
-                          id="name"
-                          placeholder="Enter fullname"
-                          className={`border ${errors.fullname ? 'border-red-500' : 'border-gray-300'} shadow p-3 w-full rounded active:outline-none focus:outline-none`}
-                          {...register("fullname",{ required: true })}
-                        />
-                        {errors.fullname && <span className="text-red-500">This field is required</span>}
-                      </div>
-                      <div className="mb-5">
-                        <label
-                          for="email"
-                          className="block mb-2 font-bold text-gray-600"
-                        >
-                          Email
-                        </label>
-                        <input
-                          type="email"
-                          id="email"
-                          placeholder="Enter email"
-                          className={`border ${errors.email ? 'border-red-500' : 'border-gray-300'} shadow p-3 w-full rounded active:outline-none focus:outline-none`}
-                          {...register("email",{ required: true })}
-                        />
-                        {errors.email && <span className="text-red-500">This field is required</span>}
-                      </div>
-                      <div className="mb-5">
-                        <label
-                          for="phone"
-                          className="block mb-2 font-bold text-gray-600"
-                        >
-                          Phone
-                        </label>
-                        <input
-                          type="number"
-                          id="phone"
-                          placeholder="Enter phone"
-                          className={`border ${errors.phone ? 'border-red-500' : 'border-gray-300'} shadow p-3 w-full rounded active:outline-none focus:outline-none`}
-                          {...register("phone",{ required: true, maxLength: 11 })}
-                        />
-                        {errors.phone?.type === 'required' && <span className="text-red-500">This field is required</span>}
-                        {errors.phone?.type === 'maxLength' && <span className="text-red-500">Enter Valid Number with 11 Characters</span>}
-                      </div>
-                      <div className="mb-5">
-                        <label
-                          for="amount"
-                          className="block mb-2 font-bold text-gray-600"
-                        >
-                          Paid Amount
-                        </label>
-                        <input
-                          type="number"
-                          id="amount"
-                          placeholder="Enter paid amount"
-                          className={`border ${errors.amount ? 'border-red-500' : 'border-gray-300'} shadow p-3 w-full rounded active:outline-none focus:outline-none`}
-                          {...register("amount",{ required: true })}
-                        />
-                        {errors.amount && <span className="text-red-500">This field is required</span>}
-                      </div>
-                      <div className="flex items-center justify-end p-6 border-t border-solid border-slate-200 rounded-b">
-                        <button
-                          className="text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
-                          type="button"
-                          onClick={() => {
-                            setShowModal(false)
-                            reset()
-                          }}
-                        >
-                          Close
-                        </button>
-                        <button
-                          className="bg-emerald-500 text-white active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
-                          type="submit"
-                        >
-                          Add Bill
-                        </button>
-                      </div>
-                    </form>
-                  ) : (
-                    <form onSubmit={handleSubmit(updateBillData)}>
-                      <div className="mb-5">
-                        <label
-                          for="name"
-                          className="block mb-2 font-bold text-gray-600"
-                        >
-                          Full Name
-                        </label>
-                        <input
-                          type="text"
-                          id="name"
-                          placeholder="Enter fullname"
-                          className="border border-gray-300 shadow p-3 w-full rounded mb-"
-                          {...register("fullname")}
-                        />
-                      </div>
-                      <div className="mb-5">
-                        <label
-                          for="email"
-                          className="block mb-2 font-bold text-gray-600"
-                        >
-                          Email
-                        </label>
-                        <input
-                          type="email"
-                          id="email"
-                          placeholder="Enter email"
-                          className="border border-gray-300 shadow p-3 w-full rounded mb-"
-                          {...register("email")}
-                        />
-                      </div>
-                      <div className="mb-5">
-                        <label
-                          for="phone"
-                          className="block mb-2 font-bold text-gray-600"
-                        >
-                          Phone
-                        </label>
-                        <input
-                          type="number"
-                          id="phone"
-                          placeholder="Enter phone"
-                          className="border border-gray-300 shadow p-3 w-full rounded mb-"
-                          {...register("phone")}
-                        />
-                      </div>
-                      <div className="mb-5">
-                        <label
-                          for="amount"
-                          className="block mb-2 font-bold text-gray-600"
-                        >
-                          Paid Amount
-                        </label>
-                        <input
-                          type="number"
-                          id="amount"
-                          placeholder="Enter paid amount"
-                          className="border border-gray-300 shadow p-3 w-full rounded mb-"
-                          {...register("amount")}
-                        />
-                      </div>
-                      <div className="flex items-center justify-end p-6 border-t border-solid border-slate-200 rounded-b">
-                        <button
-                          className="text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
-                          type="button"
-                          onClick={() => {
-                            setShowModal(false)
-                            reset()
-                          }}
-                        >
-                          Close
-                        </button>
-                        <button
-                          className="bg-emerald-500 text-white active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
-                          type="submit"
-                        >
-                          Update
-                        </button>
-                      </div>
-                    </form>
-                  )}
-                </div>
+                {alert ? (
+                  <p className="py-6 text-center text-lg font-semibold">
+                    {message}
+                  </p>
+                ) : (
+                  <div className="relative p-6 flex-auto">
+                    {add ? (
+                      <form onSubmit={handleSubmit(addBillData)}>
+                        <div className="mb-5">
+                          <label
+                            for="name"
+                            className="block mb-2 font-bold text-gray-600"
+                          >
+                            Full Name
+                          </label>
+                          <input
+                            type="text"
+                            id="name"
+                            placeholder="Enter fullname"
+                            className={`border ${
+                              errors.fullname
+                                ? "border-red-500"
+                                : "border-gray-300"
+                            } shadow p-3 w-full rounded active:outline-none focus:outline-none`}
+                            {...register("fullname", { required: true })}
+                          />
+                          {errors.fullname && (
+                            <span className="text-red-500">
+                              This field is required
+                            </span>
+                          )}
+                        </div>
+                        <div className="mb-5">
+                          <label
+                            for="email"
+                            className="block mb-2 font-bold text-gray-600"
+                          >
+                            Email
+                          </label>
+                          <input
+                            type="email"
+                            id="email"
+                            placeholder="Enter email"
+                            className={`border ${
+                              errors.email
+                                ? "border-red-500"
+                                : "border-gray-300"
+                            } shadow p-3 w-full rounded active:outline-none focus:outline-none`}
+                            {...register("email", { required: true })}
+                          />
+                          {errors.email && (
+                            <span className="text-red-500">
+                              This field is required
+                            </span>
+                          )}
+                        </div>
+                        <div className="mb-5">
+                          <label
+                            for="phone"
+                            className="block mb-2 font-bold text-gray-600"
+                          >
+                            Phone
+                          </label>
+                          <input
+                            type="number"
+                            id="phone"
+                            placeholder="Enter phone"
+                            className={`border ${
+                              errors.phone
+                                ? "border-red-500"
+                                : "border-gray-300"
+                            } shadow p-3 w-full rounded active:outline-none focus:outline-none`}
+                            {...register("phone", {
+                              required: true,
+                              maxLength: 11,
+                              minLength: 11,
+                            })}
+                          />
+                          {errors.phone?.type === "required" && (
+                            <span className="text-red-500">
+                              This field is required
+                            </span>
+                          )}
+                          {(errors.phone?.type === "maxLength" ||
+                            errors.phone?.type === "minLength") && (
+                            <span className="text-red-500">
+                              Enter Valid Number with 11 Characters
+                            </span>
+                          )}
+                        </div>
+                        <div className="mb-5">
+                          <label
+                            for="amount"
+                            className="block mb-2 font-bold text-gray-600"
+                          >
+                            Paid Amount
+                          </label>
+                          <input
+                            type="number"
+                            id="amount"
+                            placeholder="Enter paid amount"
+                            className={`border ${
+                              errors.amount
+                                ? "border-red-500"
+                                : "border-gray-300"
+                            } shadow p-3 w-full rounded active:outline-none focus:outline-none`}
+                            {...register("amount", { required: true })}
+                          />
+                          {errors.amount && (
+                            <span className="text-red-500">
+                              This field is required
+                            </span>
+                          )}
+                        </div>
+                        <div className="flex items-center justify-end p-6 border-t border-solid border-slate-200 rounded-b">
+                          <button
+                            className="text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                            type="button"
+                            onClick={() => {
+                              setShowModal(false);
+                              reset();
+                            }}
+                          >
+                            Close
+                          </button>
+                          <button
+                            className="bg-emerald-500 text-white active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                            type="submit"
+                          >
+                            Add Bill
+                          </button>
+                        </div>
+                      </form>
+                    ) : (
+                      <form onSubmit={handleSubmit(updateBillData)}>
+                        <div className="mb-5">
+                          <label
+                            for="name"
+                            className="block mb-2 font-bold text-gray-600"
+                          >
+                            Full Name
+                          </label>
+                          <input
+                            type="text"
+                            id="name"
+                            placeholder="Enter fullname"
+                            className="border border-gray-300 shadow p-3 w-full rounded mb-"
+                            {...register("fullname")}
+                          />
+                        </div>
+                        <div className="mb-5">
+                          <label
+                            for="email"
+                            className="block mb-2 font-bold text-gray-600"
+                          >
+                            Email
+                          </label>
+                          <input
+                            type="email"
+                            id="email"
+                            placeholder="Enter email"
+                            className="border border-gray-300 shadow p-3 w-full rounded mb-"
+                            {...register("email")}
+                          />
+                        </div>
+                        <div className="mb-5">
+                          <label
+                            for="phone"
+                            className="block mb-2 font-bold text-gray-600"
+                          >
+                            Phone
+                          </label>
+                          <input
+                            type="number"
+                            id="phone"
+                            placeholder="Enter phone"
+                            className="border border-gray-300 shadow p-3 w-full rounded mb-"
+                            {...register("phone")}
+                          />
+                        </div>
+                        <div className="mb-5">
+                          <label
+                            for="amount"
+                            className="block mb-2 font-bold text-gray-600"
+                          >
+                            Paid Amount
+                          </label>
+                          <input
+                            type="number"
+                            id="amount"
+                            placeholder="Enter paid amount"
+                            className="border border-gray-300 shadow p-3 w-full rounded mb-"
+                            {...register("amount")}
+                          />
+                        </div>
+                        <div className="flex items-center justify-end p-6 border-t border-solid border-slate-200 rounded-b">
+                          <button
+                            className="text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                            type="button"
+                            onClick={() => {
+                              setShowModal(false);
+                              reset();
+                            }}
+                          >
+                            Close
+                          </button>
+                          <button
+                            className="bg-emerald-500 text-white active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                            type="submit"
+                          >
+                            Update
+                          </button>
+                        </div>
+                      </form>
+                    )}
+                  </div>
+                )}
               </div>
             </div>
           </div>

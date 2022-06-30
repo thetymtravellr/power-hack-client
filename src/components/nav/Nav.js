@@ -1,10 +1,10 @@
 
-const Nav = () => {
+const Nav = ({ paidAmount }) => {
     return (
-        <header className="p-2">
+        <header className="py-4 px-8 bg-gray-200">
             <nav className="flex justify-between">
                 <h1 className="font-bold">Power-Hack</h1>
-                <p>paid bill:0</p>
+                <p>paid bill: {paidAmount}</p>
             </nav>
         </header>
     );

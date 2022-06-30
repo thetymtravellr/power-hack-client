@@ -1,19 +1,19 @@
 import { useState } from "react";
 
-const DeleteConfirmationModal = ({ id }) => {
-
+const DeleteConfirmationModal = ({ id, refetch }) => {
   const [showModal, setShowModal] = useState(false);
 
   const deleteBillingData = () => {
     fetch(`http://localhost:8080/delete-billing/${id}`, {
       method: "DELETE",
     })
-    .then(res => res.json())
-    .then(data => {
-        if(data.deletedCount === 1){
-            setShowModal(false)
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.deletedCount === 1) {
+          refetch();
+          setShowModal(false);
         }
-    });
+      });
   };
 
   return (
@@ -43,9 +43,9 @@ const DeleteConfirmationModal = ({ id }) => {
                 </div>
                 {/*body*/}
                 <div className="relative p-6 flex-auto text-center">
-                <p className="text-red-500 text-lg font-bold">
-                      Are you sure to delete?
-                    </p>
+                  <p className="text-red-500 text-lg font-bold">
+                    Are you sure to delete?
+                  </p>
                 </div>
                 {/*footer*/}
                 <div className="flex items-center justify-end p-6 border-t border-solid border-slate-200 rounded-b">
