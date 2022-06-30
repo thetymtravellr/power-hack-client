@@ -5,7 +5,7 @@ const HomePage = () => {
     return (
         <>
         <Nav/>
-        <main className="p-4">
+        <main className="p-8">
             <div>
                 <Layout/>
             </div>
