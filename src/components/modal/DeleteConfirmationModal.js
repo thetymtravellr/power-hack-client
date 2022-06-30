@@ -3,6 +3,7 @@ import { useState } from "react";
 const DeleteConfirmationModal = ({ id, refetch }) => {
   const [showModal, setShowModal] = useState(false);
 
+  console.log(id);
   const deleteBillingData = () => {
     fetch(`http://localhost:8080/delete-billing/${id}`, {
       method: "DELETE",

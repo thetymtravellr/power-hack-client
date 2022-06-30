@@ -18,6 +18,8 @@ const HomePage = () => {
     verifyUser();
   });
   const [page, setPage] = useState(0);
+  const [searchResult, setSearchResult] = useState([]);
+  const [inputValue, setInputValue] = useState("");
   const [pageCount, setPageCount] = useState(0);
   const [isAdding, setIsAdding] = useState(false);
   const userEmail = localStorage.getItem("loggingEmail");
@@ -41,8 +43,8 @@ const HomePage = () => {
   const [paidAmount, setPaidAmount] = useState(0);
   useEffect(() => {
     setPageCount(Math.ceil(data?.dataCount / 10));
-  }, [data?.dataCount]);
-  console.log(pageCount);
+  }, [page, data?.dataCount]);
+
   return (
     <>
       <BillingDataContext.Provider
@@ -59,12 +61,18 @@ const HomePage = () => {
           setPageCount,
           isAdding,
           setIsAdding,
+          searchResult,
+          setSearchResult,
+          inputValue,
+          setInputValue
         }}
       >
         <Nav paidAmount={paidAmount} />
         <main className="p-8">
           <div>
-            <Layout />
+            {
+              isLoading ? <p>loading</p> : <Layout />
+            }
           </div>
         </main>
       </BillingDataContext.Provider>

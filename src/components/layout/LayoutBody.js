@@ -9,6 +9,7 @@ const LayoutBody = () => {
     isLoading,
     refetch,
     isAdding,
+    searchResult
   } = useContext(BillingDataContext);
 
   return (
@@ -46,7 +47,10 @@ const LayoutBody = () => {
                   <td>Generating Id</td>
                 </tr>
               ) : null}
-              {data?.data?.map((items) => (
+             {
+              searchResult?.length > 0 ?
+              <>
+               {searchResult?.map((items) => (
                 <tr key={items._id}>
                   <td className="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">
                     {items._id}
@@ -69,6 +73,34 @@ const LayoutBody = () => {
                   </td>
                 </tr>
               ))}
+              </>
+              : 
+              <>
+               {data?.data?.map((items) => (
+                <tr key={items._id}>
+                  <td className="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">
+                    {items._id}
+                  </td>
+                  <td className="px-4 py-2 text-gray-700 whitespace-nowrap">
+                    {items.fullname}
+                  </td>
+                  <td className="px-4 py-2 text-gray-700 whitespace-nowrap">
+                    {items.email}
+                  </td>
+                  <td className="px-4 py-2 text-gray-700 whitespace-nowrap">
+                    {items.phone}
+                  </td>
+                  <td className="px-4 py-2 text-gray-700 whitespace-nowrap">
+                    {items.amount}
+                  </td>
+                  <td className="px-4 py-2 text-gray-700 whitespace-nowrap">
+                    <DeleteConfirmationModal id={items._id} refetch={refetch} />
+                    <Modal id={items._id} />
+                  </td>
+                </tr>
+              ))}
+              </>
+             }
             </tbody>
           </table>
         )}

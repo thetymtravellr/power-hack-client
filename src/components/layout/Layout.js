@@ -4,13 +4,8 @@ import LayoutBody from "../layout/LayoutBody";
 import LayoutHeader from "../layout/LayoutHeader";
 
 const Layout = () => {
-  const {
-    data,
-    setPaidAmount,
-    setPage,
-    pageCount
-  } = useContext(BillingDataContext);
-  const pages = [...Array(pageCount).keys()];
+  const { data, setPaidAmount, setPage, pageCount } =
+    useContext(BillingDataContext);
 
   useEffect(() => {
     const calculatePaidAmount = async () => {
@@ -26,18 +21,17 @@ const Layout = () => {
 
   return (
     <div>
-      <LayoutHeader />
-      <LayoutBody />
+      <LayoutHeader/>
+      <LayoutBody/>
       <div className="flex space-x-3 justify-center mt-12">
-        {pages.length > 1 &&
-          pages.map((page) => (
-            <button
-              onClick={() => setPage(page)}
-              className="border px-3 py-1 rounded hover:bg-gray-100"
-            >
-              {page + 1}
-            </button>
-          ))}
+        {pageCount > 1 && [...Array(pageCount || 0).keys()].map((page) => (
+          <button
+            onClick={() => setPage(page)}
+            className="border px-3 py-1 rounded hover:bg-gray-100"
+          >
+            {page + 1}
+          </button>
+        ))}
       </div>
     </div>
   );

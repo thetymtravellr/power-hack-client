@@ -1,18 +1,78 @@
+import { useContext } from "react";
+import { useQuery } from "react-query";
+import { BillingDataContext } from "../../pages/home/HomePage";
 import Modal from "../modal/Modal";
 
 const LayoutHeader = () => {
+  const {
+    userEmail,
+    refetch,
+    isLoading,
+    page,
+    inputValue,
+    setInputValue,
+    setSearchResult,
+  } = useContext(BillingDataContext);
+
+  const { data: searchResult } = useQuery(
+    ["searchedData", page],
+    async () => {
+      const res = await fetch(
+        `http://localhost:8080/billing-list?email=${userEmail}&page=${page}`,
+        {
+          method: "GET",
+          headers: {
+            authorization: `${localStorage.getItem("accessToken")}`,
+          },
+        }
+      );
+      return res.json();
+    }
+  );
+
+  const searchHandler = () => {
+    fetch(
+      `http://localhost:8080/billing-list?email=${userEmail}&page=${page}&q=${inputValue}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `${localStorage.getItem("accessToken")}`,
+        },
+      }
+    )
+      .then((res) => res.json())
+      .then((data) => setSearchResult(data.data));
+  };
+
+  const reset = () => {
+    setSearchResult([])
+    setInputValue("")
+    refetch()
+  }
 
   return (
     <header className="flex justify-between bg-gray-100 py-2 px-5 border-b">
       <div className="flex items-center">
         <h1>Billings</h1>
         <div className="ml-4 border h-8">
-          <input className="h-full px-1" type="text" placeholder="Search" />
-          <button className="py-1 px-2 hover:bg-gray-300">Search</button>
+          <input
+            className="h-full px-1"
+            type="text"
+            placeholder="Search"
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
+          />
+          <button
+            className="py-1 px-2 hover:bg-gray-300"
+            onClick={searchHandler}
+          >
+            Search
+          </button>
         </div>
+        <button onClick={reset}>Reset</button>
       </div>
       <div>
-        <Modal add={true}/>
+        <Modal add={true} />
       </div>
     </header>
   );
