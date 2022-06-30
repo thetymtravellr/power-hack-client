@@ -6,6 +6,8 @@ import Loading from "../../components/Loading";
 const RegisterPage = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
+  const [message, setMessage] = useState("");
+
   const {
     register,
     reset,
@@ -31,11 +33,13 @@ const RegisterPage = () => {
       .then((data) => {
         if (data.message === "success") {
           localStorage.setItem("accessToken", data.token);
-          localStorage.setItem("loggingEmail", user.email)
+          localStorage.setItem("loggingEmail", user.email);
           setIsLoading(false);
           navigate("/");
+        } else {
+          setMessage(data.message);
+          setIsLoading(false);
         }
-        setIsLoading(false);
       });
   };
 
@@ -75,13 +79,17 @@ const RegisterPage = () => {
               type="email"
               id="email"
               placeholder="Enter email"
+              onClick={() => setMessage("")}
               className={`border ${
-                errors.email ? "border-red-500" : "border-gray-300"
+                (errors.email || message) ? "border-red-500" : "border-gray-300"
               } shadow p-3 w-full rounded active:outline-none focus:outline-none`}
               {...register("email", { required: true })}
             />
             {errors.email && (
               <span className="text-red-500">This field is required</span>
+            )}
+            {message === "User already exist" && (
+              <span className="text-red-500 font-semibold">{message}</span>
             )}
           </div>
           <div className="mb-5">
@@ -94,6 +102,7 @@ const RegisterPage = () => {
             <input
               type="password"
               id="password"
+              onClick={() => setMessage("")}
               placeholder="Enter password"
               className={`border ${
                 errors.password ? "border-red-500" : "border-gray-300"
@@ -107,6 +116,9 @@ const RegisterPage = () => {
               <span className="text-red-500">
                 Password must be 6 characters long
               </span>
+            )}
+            {message === "Something went wrong" && (
+              <span className="text-red-500 font-semibold">{message}, try again</span>
             )}
           </div>
           <p>

@@ -1,5 +1,4 @@
 import { useContext } from "react";
-import { useQuery } from "react-query";
 import { BillingDataContext } from "../../pages/home/HomePage";
 import Modal from "../modal/Modal";
 
@@ -13,22 +12,6 @@ const LayoutHeader = () => {
     setInputValue,
     setSearchResult,
   } = useContext(BillingDataContext);
-
-  const { data: searchResult } = useQuery(
-    ["searchedData", page],
-    async () => {
-      const res = await fetch(
-        `https://gentle-bastion-30357.herokuapp.com/billing-list?email=${userEmail}&page=${page}`,
-        {
-          method: "GET",
-          headers: {
-            authorization: `${localStorage.getItem("accessToken")}`,
-          },
-        }
-      );
-      return res.json();
-    }
-  );
 
   const searchHandler = () => {
     fetch(

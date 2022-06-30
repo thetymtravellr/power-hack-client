@@ -3,10 +3,12 @@ import { useQuery } from "react-query";
 import { useNavigate } from "react-router-dom";
 import Layout from "../../components/layout/Layout";
 import Nav from "../../components/nav/Nav";
-export const BillingDataContext = createContext(10);
+export const BillingDataContext = createContext('default');
 
 const HomePage = () => {
   const navigate = useNavigate();
+
+  // verify token
   useEffect(() => {
     const verifyUser = async () => {
       const userEmail = localStorage.getItem("loggingEmail");
@@ -17,6 +19,7 @@ const HomePage = () => {
     };
     verifyUser();
   });
+  
   const [page, setPage] = useState(0);
   const [searchResult, setSearchResult] = useState([]);
   const [inputValue, setInputValue] = useState("");

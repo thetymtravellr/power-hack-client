@@ -3,7 +3,6 @@ import { useState } from "react";
 const DeleteConfirmationModal = ({ id, refetch }) => {
   const [showModal, setShowModal] = useState(false);
 
-  console.log(id);
   const deleteBillingData = () => {
     fetch(`https://gentle-bastion-30357.herokuapp.com/delete-billing/${id}`, {
       method: "DELETE",
