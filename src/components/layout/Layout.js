@@ -9,7 +9,6 @@ const Layout = () => {
 
   useEffect(() => {
     const calculatePaidAmount = async () => {
-      console.log(data.calculateAmountArray);
       const paidAmount = data?.calculateAmountArray?.reduce(
         (total, currentValue) =>
           (total = total + parseInt(currentValue.amount)),

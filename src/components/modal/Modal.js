@@ -16,7 +16,6 @@ const Modal = ({ add, id }) => {
     useContext(BillingDataContext);
 
     const matchedData = billData?.data?.find(bill => bill._id === id)
-    console.log(matchedData);
 
   const addBillData = (data) => {
     setIsAdding(true);

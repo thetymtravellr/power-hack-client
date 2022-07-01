@@ -47,7 +47,7 @@ const LayoutBody = () => {
           <tbody className="divide-y divide-gray-100">
             {isAdding ? (
               <tr>
-                <td>Generating Id</td>
+                <td className="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">Generating Id</td>
               </tr>
             ) : null}
            {

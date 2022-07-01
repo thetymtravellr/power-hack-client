@@ -33,7 +33,7 @@ const RegisterPage = () => {
       .then((data) => {
         if (data.message === "success") {
           localStorage.setItem("accessToken", data.token);
-          localStorage.setItem("loggingEmail", user.email);
+          localStorage.setItem("loggingEmail", data.email);
           setIsLoading(false);
           navigate("/");
         } else {

@@ -6,7 +6,7 @@ import Loading from "../../components/Loading";
 const LoginPage = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
-  const [message,setMessage] = useState("")
+  const [message, setMessage] = useState("");
 
   const {
     register,
@@ -33,22 +33,20 @@ const LoginPage = () => {
         console.log(data);
         if (data.message === "success") {
           localStorage.setItem("accessToken", data.token);
-          localStorage.setItem("loggingEmail", data.email)
+          localStorage.setItem("loggingEmail", data.email);
           console.log(data.email);
           setIsLoading(false);
           navigate("/");
         } else {
           setMessage(data.message);
-          setIsLoading(false)
+          setIsLoading(false);
         }
-        
       });
   };
 
-  if(isLoading){
-    return <Loading/>
+  if (isLoading) {
+    return <Loading />;
   }
-
 
   return (
     <div className="min-h-screen flex items-center">
@@ -65,17 +63,15 @@ const LoginPage = () => {
               placeholder="Enter email"
               onClick={() => setMessage("")}
               className={`border ${
-                (errors.email || message) ? "border-red-500" : "border-gray-300"
+                errors.email || message ? "border-red-500" : "border-gray-300"
               } shadow p-3 w-full rounded active:outline-none focus:outline-none`}
               {...register("email", { required: true })}
             />
             {errors.email && (
               <span className="text-red-500">This field is required</span>
             )}
-            {message === 'no user found' && (
-              <span className="text-red-500 font-semibold">
-                {message}
-              </span>
+            {message === "no user found" && (
+              <span className="text-red-500 font-semibold">{message}</span>
             )}
           </div>
           <div className="mb-5">
@@ -91,7 +87,9 @@ const LoginPage = () => {
               placeholder="Enter password"
               onClick={() => setMessage("")}
               className={`border ${
-                (errors.password || message) ? "border-red-500" : "border-gray-300"
+                errors.password || message
+                  ? "border-red-500"
+                  : "border-gray-300"
               } shadow p-3 w-full rounded active:outline-none focus:outline-none`}
               {...register("password", { required: true, minLength: 6 })}
             />
@@ -103,10 +101,8 @@ const LoginPage = () => {
                 Password must be 6 characters long
               </span>
             )}
-            {message === 'invalid' && (
-              <span className="text-red-500 font-semibold">
-                {message}
-              </span>
+            {message === "invalid" && (
+              <span className="text-red-500 font-semibold">{message}</span>
             )}
           </div>
           <p>
