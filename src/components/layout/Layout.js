@@ -21,17 +21,19 @@ const Layout = () => {
 
   return (
     <div>
-      <LayoutHeader/>
-      <LayoutBody/>
+      <LayoutHeader />
+      <LayoutBody />
       <div className="flex space-x-3 justify-center mt-12">
-        {pageCount > 1 && [...Array(pageCount || 0).keys()].map((page) => (
-          <button
-            onClick={() => setPage(page)}
-            className="border px-3 py-1 rounded hover:bg-gray-100"
-          >
-            {page + 1}
-          </button>
-        ))}
+        {pageCount > 1
+          ? [...Array(pageCount || 0).keys()].map((page) => (
+              <button
+                onClick={() => setPage(page)}
+                className="border px-3 py-1 rounded hover:bg-gray-100"
+              >
+                {page + 1}
+              </button>
+            ))
+          : null}
       </div>
     </div>
   );
