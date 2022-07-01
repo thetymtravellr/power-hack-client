@@ -23,7 +23,7 @@ const Modal = ({ add, id }) => {
       fullname: data.fullname,
       email: data.email,
       phone: data.phone,
-      amount: data.amount,
+      amount: parseFloat(data.amount),
       addedBy: userEmail,
     };
     setPaidAmount((prevAmount) => prevAmount + billingData.amount);
@@ -57,7 +57,7 @@ const Modal = ({ add, id }) => {
       fullname: data.fullname || matchedData.fullname,
       email: data.email || matchedData.email,
       phone: data.phone || matchedData.phone,
-      amount: data.amount || matchedData.amount,
+      amount: parseFloat(data.amount) || parseFloat(matchedData.amount),
     };
 
     fetch(`https://gentle-bastion-30357.herokuapp.com/update-billing/${id}`, {
@@ -207,6 +207,7 @@ const Modal = ({ add, id }) => {
                           </label>
                           <input
                             type="number"
+                            step="any"
                             id="amount"
                             placeholder="Enter paid amount"
                             className={`border ${

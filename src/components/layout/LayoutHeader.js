@@ -52,7 +52,7 @@ const LayoutHeader = () => {
             Search
           </button>
         </div>
-        <button className="ml-2 py-1 px-2 border hover:bg-gray-300" onClick={reset}>Reset</button>
+        <button className="ml-2 py-1 px-2 border hover:bg-gray-300" onClick={reset}>Reset Search</button>
       </div>
       <div>
         <Modal add={true} />
