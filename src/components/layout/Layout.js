@@ -19,13 +19,15 @@ const Layout = () => {
     calculatePaidAmount();
   });
 
+  const pages = [...Array(`${isNaN(pageCount) ? 0 : pageCount}`).keys()];
+
   return (
     <div>
       <LayoutHeader />
       <LayoutBody />
       <div className="flex space-x-3 justify-center mt-12">
-        {pageCount > 1
-          ? [...Array(pageCount).keys()].map((page) => (
+        {pages?.length > 1
+          ? pages.map((page) => (
               <button
                 onClick={() => setPage(page)}
                 className="border px-3 py-1 rounded hover:bg-gray-100"
