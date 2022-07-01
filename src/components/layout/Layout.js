@@ -25,7 +25,7 @@ const Layout = () => {
       <LayoutBody />
       <div className="flex space-x-3 justify-center mt-12">
         {pageCount > 1
-          ? [...Array(pageCount || 0).keys()].map((page) => (
+          ? [...Array(pageCount).keys()].map((page) => (
               <button
                 onClick={() => setPage(page)}
                 className="border px-3 py-1 rounded hover:bg-gray-100"
