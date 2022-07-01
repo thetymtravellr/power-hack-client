@@ -9,7 +9,7 @@ const Nav = ({ paidAmount }) => {
         navigate('/login')
     }
   return (
-    <header className="py-4 px-8 bg-indigo-600 text-white font-medium">
+    <header className="py-4 px-8 bg-gray-200 font-medium">
       <nav className="flex justify-between">
         <h1 className="font-bold">Power-Hack</h1>
         <div className="flex space-x-3">
